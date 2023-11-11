@@ -1,7 +1,6 @@
 import ctypes
 import math
 import socket
-import keyboard
 import time
 import os
 import multiprocessing

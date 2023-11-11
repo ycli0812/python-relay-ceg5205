@@ -5,17 +5,16 @@ import time
 import TestClient
 import RelayServer
 import socket
-import keyboard
 from utils import proc_print
 
 
-def receive(q):
+def receive(q, port=7777):
     if q is None:
         proc_print('This function must be run in a sub-process and require a Queue.')
         return
 
     # create server and wait for connection
-    relay = RelayServer.RelayServer(host='127.0.0.1', port=5000)
+    relay = RelayServer.RelayServer(host='127.0.0.1', port=port)
     relay.accept()
 
     # ready to receive
@@ -37,8 +36,8 @@ def receive(q):
                     frame = eval(buffer)
                 except Exception as e:
                     proc_print('Invalid data.', e)
-                proc_print(frame)
                 q.put(frame)
+                proc_print('Receiver: ', sum(frame))
                 # clear
                 left_bracket_detected = False
                 right_bracket_detected = False

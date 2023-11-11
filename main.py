@@ -30,4 +30,5 @@ if __name__ == '__main__':
         c.send(str(random_list))
     # --- end ---
 
+    proc_print('Waiting sub process join.')
     p_test_receiver.join()

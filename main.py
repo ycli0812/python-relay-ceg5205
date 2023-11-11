@@ -21,6 +21,7 @@ from utils import proc_print
 
 
 if __name__ == '__main__':
+    # random change
     proc_print('This is main process')
     queue = multiprocessing.Queue()
     server_port = 7777

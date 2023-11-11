@@ -1,10 +1,4 @@
-import multiprocessing
-import os
-import time
-
-import TestClient
 import RelayServer
-import socket
 from utils import proc_print
 
 
@@ -12,6 +6,8 @@ def receive(q, port=7777):
     if q is None:
         proc_print('This function must be run in a sub-process and require a Queue.')
         return
+
+    proc_print('This is a receiver process.')
 
     # create server and wait for connection
     relay = RelayServer.RelayServer(host='127.0.0.1', port=port)
@@ -35,9 +31,9 @@ def receive(q, port=7777):
                 try:
                     frame = eval(buffer)
                 except Exception as e:
-                    proc_print('Invalid data.', e)
+                    proc_print('Invalid data.', buffer)
                 q.put(frame)
-                proc_print('Receiver: ', sum(frame))
+                proc_print('Receiver: ', frame)
                 # clear
                 left_bracket_detected = False
                 right_bracket_detected = False

@@ -18,12 +18,16 @@ def send(q, bind_port=7777, remote_port=8888):
     # relay = RelayServer.RelayServer(host='127.0.0.1', port=bind_port)
     # relay.connect(host='127.0.0.1', port=remote_port)
 
+    buffer = []
+
     # ready to receive
     while True:
         while not q.empty():
             data = q.get()
             # TODO: store data
+            buffer.append(data)
             # TODO: feed data into the model
+            if len(buffer) >= 150:
+                pass
             # TODO: send data to Unity client
-            proc_print('Sender:', sum(data))
-
+            # proc_print('Sender:', sum(data))

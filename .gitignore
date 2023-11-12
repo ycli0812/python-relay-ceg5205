@@ -1,2 +1,4 @@
 .idea
 __pycache__
+model/model_demo.pt
+model/data_input_example.csv

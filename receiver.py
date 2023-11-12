@@ -37,7 +37,7 @@ def receive(q, port=7777):
                 except Exception as e:
                     proc_print('Invalid data.', e)
                 q.put(frame)
-                proc_print('Receiver: ', sum(frame))
+                # proc_print('Receiver: ', sum(frame))
                 # clear
                 left_bracket_detected = False
                 right_bracket_detected = False

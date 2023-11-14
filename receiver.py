@@ -1,44 +1,23 @@
-import multiprocessing
-import os
+import asyncio
+import websockets
+from utils import proc_print
 import time
 
-import TestClient
-import RelayServer
-import socket
-from utils import proc_print
 
-
-def receive(q, port=7777):
+def websocket_receive(lock, q, port=12345):
     if q is None:
-        proc_print('This function must be run in a sub-process and require a Queue.')
         return
 
-    # create server and wait for connection
-    relay = RelayServer.RelayServer(host='127.0.0.1', port=port)
-    relay.accept()
+    async def echo(websocket, path):
+        async for message in websocket:
+            try:
+                data = eval(message)
+                q.put(data)
+            except Exception as e:
+                proc_print('Parse failed.')
 
-    # ready to receive
-    buffer = ''
-    left_bracket_detected = False
-    right_bracket_detected = False
-    while True:
-        res = relay.recv(1).decode('utf-8')
-        if res != '':
-            buffer += res
-            if res == '[':
-                left_bracket_detected = True
-            if res == ']':
-                right_bracket_detected = True
-            if left_bracket_detected and right_bracket_detected:
-                frame = None
-                # try to parse data
-                try:
-                    frame = eval(buffer)
-                except Exception as e:
-                    proc_print('Invalid data.', e)
-                q.put(frame)
-                # proc_print('Receiver: ', sum(frame))
-                # clear
-                left_bracket_detected = False
-                right_bracket_detected = False
-                buffer = ''
+    start_server = websockets.serve(echo, "0.0.0.0", port)  # Change the host and port if needed
+    lock.release()
+
+    asyncio.get_event_loop().run_until_complete(start_server)
+    asyncio.get_event_loop().run_forever()

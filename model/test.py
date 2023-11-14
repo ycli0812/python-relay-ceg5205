@@ -5,7 +5,7 @@ import torch
 import numpy as np
 
 
-def load_model(path='model_demo.pt'):
+def load_model(path='model_demo_95.pt'):
     assert os.path.exists(path), 'train the model first'
     # if not os.path.exists(path):
     #     return None, None
@@ -24,10 +24,10 @@ def load_model(path='model_demo.pt'):
     return model, device
 
 
-# model, device = load_model()
-#
-# # load data
-# file_name = 'data_input_example.csv'
+model, device = load_model()
+
+# load data
+# file_name = 'test-data/false/28C4C347-C8E1-4E85-BAF5-95EDE8985944.csv'
 # raw_data = pd.read_csv(file_name)
 # raw_data_np = raw_data.to_numpy()
 # if raw_data_np.shape[0] > 149:

@@ -9,15 +9,23 @@ class GRUModel(torch.nn.Module):
         self.num_layers = num_layers
         self.num_classes = num_classes
 
-        self.gru = torch.nn.GRU(input_size, hidden_size, num_layers, batch_first=True)
+        self.gru1 = torch.nn.GRU(input_size, hidden_size, num_layers, batch_first=True)
+        self.gru2 = torch.nn.GRU(hidden_size, hidden_size, num_layers, batch_first=True)
         self.ac = torch.nn.ReLU()
-        self.fc = torch.nn.Linear(hidden_size, num_classes)
+        self.fc1 = torch.nn.Linear(hidden_size, hidden_size)
+        self.fc2 = torch.nn.Linear(hidden_size, hidden_size)
+        self.fc3 = torch.nn.Linear(hidden_size, num_classes)
+
 
     def forward(self, x):
 
         h0 = torch.zeros(self.num_layers, x.size(0), self.hidden_size).to(x.device)
-        out, h0 = self.gru(x, h0)
+        h1 = torch.zeros(self.num_layers, x.size(0), self.hidden_size).to(x.device)
+        out, h0 = self.gru1(x, h0)
+        out, h1 = self.gru2(out, h1)
         out = self.ac(out)
+        out = self.fc1(out)
+        out = self.fc2(out)
+        out = self.fc3(out[:, -1, :])
 
-        out = self.fc(out[:, -1, :])
         return out
